@@ -1,0 +1,6 @@
+**/.venv
+**/poetry.lock
+**/.env
+**/secrets
+**/__pycache__
+**/*.sh
