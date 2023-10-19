@@ -1,5 +1,7 @@
 # COMMUNAUTO TELEGRAM BOT
 
+Status: **Early development**
+
 ## Description
 
 This is a Telegram bot that allows you to interact with Communauto's API.
@@ -13,7 +15,7 @@ This is a Telegram bot that allows you to interact with Communauto's API.
 ### Setup
 
 .env file:
-
+to be added
 
 ## Usage
 
