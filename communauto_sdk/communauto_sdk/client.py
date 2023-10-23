@@ -56,3 +56,18 @@ class CommunautoClient:
             logger.error(e)
             return None
         
+    def getStationsAvailability(self, city: dict) -> dict:
+        version = 'v2'
+        endpoint = 'AvailableCity'
+
+        url = f'{self.base_url}/{version}/Branch/{city.get("branchId")}/{endpoint}'
+        params = {
+            'cityId': city.get('cityId'),
+            'MinLatitude': city.get('isDefaultBranchCity'),
+            'MaxLatitude': city.get('cityCenterLocation'),
+            'MinLongitude': city.get('cityCenterLocation'),
+            'MaxLongitude': city.get('cityCenterLocation'),
+            'StartDateTime': '2021-09-01T00:00:00',
+            'EndDateTime': '2021-09-01T23:59:59',
+        }
+        # ...
