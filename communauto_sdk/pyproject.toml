@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "communauto-sdk"
+version = "0.1.0"
+description = ""
+authors = ["FloDevelops <65234487+FloDevelops@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.31.0"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.2"
+requests-mock = "^1.11.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
