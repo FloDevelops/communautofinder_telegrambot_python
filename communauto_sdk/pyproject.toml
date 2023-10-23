@@ -4,6 +4,9 @@ version = "0.1.0"
 description = ""
 authors = ["FloDevelops <65234487+FloDevelops@users.noreply.github.com>"]
 readme = "README.md"
+packages = [
+    { include = "communauto_sdk"},
+]
 
 [tool.poetry.dependencies]
 python = "^3.11"
