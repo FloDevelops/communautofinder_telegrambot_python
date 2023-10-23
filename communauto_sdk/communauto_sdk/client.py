@@ -36,3 +36,23 @@ class CommunautoClient:
         self.branches = branches
         return self.branches
     
+    def getCities(self, branchId: int) -> dict:
+        version = 'v2'
+        endpoint = 'AvailableCity'
+
+        url = f'{self.base_url}/{version}/Branch/{branchId}/{endpoint}'
+        try:
+            response = get(url)
+            if response.status_code != 200:
+                logger.error(f'Error {response.status_code} for branch {branchId}')
+                return None
+            
+            cities = response.json().get('cities')
+            filtered_cities = [city for city in cities if city.get('branchId') == branchId]
+            self.cities = filtered_cities
+            return self.cities
+        
+        except Exception as e:
+            logger.error(e)
+            return None
+        
