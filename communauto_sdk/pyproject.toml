@@ -1,17 +1,17 @@
 [tool.poetry]
-name = "communauto-sdk"
+name = "reservauto"
 version = "0.1.0"
-description = ""
+description = "Unofficial Python package for Reservauto's API"
 authors = ["FloDevelops <65234487+FloDevelops@users.noreply.github.com>"]
 readme = "README.md"
+license = "MIT"
 packages = [
-    { include = "communauto_sdk"},
+    { include = "reservauto" },
 ]
 
 [tool.poetry.dependencies]
 python = "^3.11"
 requests = "^2.31.0"
-
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"
