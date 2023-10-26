@@ -1,14 +1,21 @@
 [tool.poetry]
-name = "communautofinder-telegrambot-python"
+name = "telegrambot-reservauto"
 version = "0.1.0"
 description = ""
 authors = ["FloDevelops <65234487+FloDevelops@users.noreply.github.com>"]
+license = "MIT"
 readme = "README.md"
+
+[tool.poetry.scripts]
+start = "telegrambot_reservauto.__main__:main"
+dev-orm = "telegrambot_reservauto.orm:main"
 
 [tool.poetry.dependencies]
 python = "^3.11"
 python-telegram-bot = {extras = ["webhooks"], version = "^20.6"}
 python-dotenv = "^1.0.0"
+mysql-connector-python = "^8.2.0"
+mysqlclient = "^2.2.0"
 
 
 [build-system]
