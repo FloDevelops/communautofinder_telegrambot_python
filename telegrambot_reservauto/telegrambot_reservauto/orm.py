@@ -72,24 +72,17 @@ class Database():
     def get_user(self, telegram_user_id) -> dict:
         try:
             self.connect()
-
-            # Create a cursor to interact with the database
             cursor = self.connection.cursor()
 
             # Execute 'SELECT' query
             cursor.execute(f'SELECT * FROM users WHERE telegram_user_id = {telegram_user_id}')
-
-            # Fetch all the rows
             user = cursor.fetchone()
-
-            # Print out the tables
-            print('User:')
-            print(user)
 
             if user is None:
                 return None
             
-            return user[0]
+            user_dict = {column[0]: value for column, value in zip(cursor.description, user)}
+            return user_dict
 
         except MySQLdb.Error as e:
             print('MySQL Error:', e)
@@ -100,11 +93,10 @@ class Database():
             cursor.close()
             self.disconnect()
 
+
     def create_user(self, telegram_user, telegram_chat_id) -> bool:
         try:
             self.connect()
-
-            # Create a cursor to interact with the database
             cursor = self.connection.cursor()
 
             # Execute 'INSERT' query
@@ -123,7 +115,6 @@ telegram_chat_id
 "{telegram_user.language_code}", 
 "{telegram_chat_id}"
 )''')
-            # 'INSERT INTO users (telegram_user_id, telegram_username, telegram_first_name, telegram_last_name, telegram_language_code, telegram_chat_id) VALUES ("123456", "myUsername", "John", "Doe", "en", "456789");'
 
             # Commit changes
             self.connection.commit()
@@ -134,6 +125,29 @@ telegram_chat_id
             print('MySQL Error:', e)
             return False
 
+        finally:
+            # Close the cursor and connection
+            cursor.close()
+            self.disconnect()
+
+
+    def update_user(self, telegram_user, updates: dict) -> bool:
+        try:
+            self.connect()
+            cursor = self.connection.cursor()
+
+            # Execute 'UPDATE' query
+            cursor.execute(f'''UPDATE users SET {', '.join([f'{key} = "{value}"' for key, value in updates.items()])} WHERE telegram_user_id = {telegram_user.id}''')
+
+            # Commit changes
+            self.connection.commit()
+
+            return True
+        
+        except MySQLdb.Error as e:
+            print('MySQL Error:', e)
+            return False
+        
         finally:
             # Close the cursor and connection
             cursor.close()
