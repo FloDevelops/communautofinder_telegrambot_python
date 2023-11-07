@@ -9,6 +9,7 @@ CREATE TABLE `users` (
     `telegram_chat_id` varchar(20) NOT NULL,
 	`is_enabled` tinyint(1) NOT NULL DEFAULT 0,
     `has_accepted_communications` tinyint(1) NOT NULL DEFAULT 0,
+	`preferred_city_id` varchar(3),
 	`created_at` timestamp NOT NULL DEFAULT current_timestamp(),
 	`last_updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
 	PRIMARY KEY `telegram_user_id` (`telegram_user_id`)
