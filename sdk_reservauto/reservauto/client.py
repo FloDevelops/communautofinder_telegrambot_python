@@ -100,7 +100,7 @@ class ReservautoClient:
             return None
 
 
-    def get_stations_availability(self, city: dict, min_latitude: float, max_latitude: float, min_longitude: float, max_longitute: float, start_datetime: datetime, end_datetime: datetime) -> dict:
+    def get_stations_availability(self, min_latitude: float, max_latitude: float, min_longitude: float, max_longitude: float, start_datetime: datetime, end_datetime: datetime, city_id: int = None, city: dict = None) -> dict:
         '''Returns a list of all available stations for a given city, location and time range.'''
 
         logger.info(f'Getting stations for city {city.get("cityLocalizedName")} from {start_datetime} to {end_datetime}...')
@@ -108,13 +108,19 @@ class ReservautoClient:
         version = 'v2'
         endpoint = 'StationAvailability'
 
+        if city_id is None and city is None:
+            logger.error('Error: city_id or city must be specified.')
+            return None
+        elif city_id is None:
+            city_id = city.get('cityId')
+
         url = f'{self.base_url}/{version}/{endpoint}'
         params = {
             'cityId': city.get('cityId'),
             'MinLatitude': min_latitude,
             'MaxLatitude': max_latitude,
             'MinLongitude': min_longitude,
-            'MaxLongitude': max_longitute,
+            'MaxLongitude': max_longitude,
             'StartDate': start_datetime.strftime('%Y-%m-%dT%H:%M:%S'),
             'EndDate': end_datetime.strftime('%Y-%m-%dT%H:%M:%S'),
         }

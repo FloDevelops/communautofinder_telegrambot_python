@@ -9,7 +9,7 @@ saved_stations_availability = ReservautoClient().get_stations_availability(
     min_latitude=45.5, 
     max_latitude=45.6, 
     min_longitude=-73.6,
-    max_longitute=-73.5,
+    max_longitude=-73.5,
     start_datetime=datetime.datetime.now() + datetime.timedelta(weeks=4),
     end_datetime=datetime.datetime.now() + datetime.timedelta(weeks=4, hours=1)
 )
