@@ -103,20 +103,21 @@ class ReservautoClient:
     def get_stations_availability(self, min_latitude: float, max_latitude: float, min_longitude: float, max_longitude: float, start_datetime: datetime, end_datetime: datetime, city_id: int = None, city: dict = None) -> dict:
         '''Returns a list of all available stations for a given city, location and time range.'''
 
-        logger.info(f'Getting stations for city {city.get("cityLocalizedName")} from {start_datetime} to {end_datetime}...')
-
-        version = 'v2'
-        endpoint = 'StationAvailability'
-
         if city_id is None and city is None:
             logger.error('Error: city_id or city must be specified.')
             return None
         elif city_id is None:
             city_id = city.get('cityId')
 
+        logger.info(f'Getting stations for city {city_id} from {start_datetime} to {end_datetime}...')
+
+        version = 'v2'
+        endpoint = 'StationAvailability'
+
+
         url = f'{self.base_url}/{version}/{endpoint}'
         params = {
-            'cityId': city.get('cityId'),
+            'cityId': city_id,
             'MinLatitude': min_latitude,
             'MaxLatitude': max_latitude,
             'MinLongitude': min_longitude,
@@ -128,7 +129,7 @@ class ReservautoClient:
             response = get(url, params=params, timeout=5)
             if response.status_code != 200:
                 logger.error(
-                    f'Error {response.status_code} for city {city.get("cityName")}')
+                    f'Error {response.status_code} for city {city_id}')
                 return None
 
             logger.debug(json.dumps(response.json(),
