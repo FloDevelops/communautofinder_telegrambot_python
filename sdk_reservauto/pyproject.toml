@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "reservauto"
-version = "0.1.1"
+version = "0.1.2"
 description = "Unofficial Python package for Reservauto's API"
 authors = ["FloDevelops <65234487+FloDevelops@users.noreply.github.com>"]
 readme = "README.md"

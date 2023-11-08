@@ -20,19 +20,11 @@ class EmojiFormatter(logging.Formatter):
 
 logger = logging.getLogger(__name__)
 log_to_console = logging.StreamHandler()
-log_to_file = TimedRotatingFileHandler(
-    filename='logs/reservauto.log', when='midnight', interval=1)
-
 log_to_console.setLevel(logging.INFO)
-log_to_file.setLevel(logging.INFO)
-
 log_format = EmojiFormatter(
     '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 log_to_console.setFormatter(log_format)
-log_to_file.setFormatter(log_format)
-
 logger.addHandler(log_to_console)
-logger.addHandler(log_to_file)
 logger.setLevel(logging.INFO)
 
 
