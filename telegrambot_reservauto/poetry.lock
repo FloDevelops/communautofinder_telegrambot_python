@@ -342,13 +342,13 @@ use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "reservauto"
-version = "0.1.0"
+version = "0.1.2"
 description = "Unofficial Python package for Reservauto's API"
 optional = false
 python-versions = ">=3.11,<4.0"
 files = [
-    {file = "reservauto-0.1.0-py3-none-any.whl", hash = "sha256:2bdfb28d836032b0dd1aa7a9fc9f1b2b9499a3bcafab3e7ac5f674ac78a83047"},
-    {file = "reservauto-0.1.0.tar.gz", hash = "sha256:a3c6cccff5112803d8a7a95294b01ab4a8568f3f20c4b933ba8550879d5d9a14"},
+    {file = "reservauto-0.1.2-py3-none-any.whl", hash = "sha256:e3e0c5c2aaed2f4fea2be74b39ce6cab63c2df8008f6bd456ff49eabd780f106"},
+    {file = "reservauto-0.1.2.tar.gz", hash = "sha256:0b6fd53ea44ff46bd84fb2f079ed0ee0e7bdc3bc5b1745a654106b707dc226cb"},
 ]
 
 [package.dependencies]
@@ -405,4 +405,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "3175e1009c345aeb7366c6a7895d046084e11ce691646b646cfa17c93cb9b62a"
+content-hash = "49feef27b6eed2b93e2e6c117c189f85e66975e5bbdb477ba237880e1e72ef41"
