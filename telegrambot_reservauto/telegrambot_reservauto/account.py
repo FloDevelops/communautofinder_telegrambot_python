@@ -7,7 +7,7 @@ from telegram.ext import (
     MessageHandler,
     filters
 )
-from telegrambot_reservauto.orm import Database
+from telegrambot_reservauto.utilities.orm import Database
 
 reservauto_client = client.ReservautoClient()
 branches = reservauto_client.branches

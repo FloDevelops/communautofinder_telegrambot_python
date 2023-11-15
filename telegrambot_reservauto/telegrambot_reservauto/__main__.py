@@ -1,6 +1,5 @@
 import logging
 import json
-import re
 from os import getenv
 from dotenv import load_dotenv
 from telegram import Update
@@ -10,7 +9,6 @@ from telegram.ext import (
     ContextTypes,
 )
 from telegrambot_reservauto.account import ask_branch, account_conv_handler
-from telegrambot_reservauto.orm import Database
 from telegrambot_reservauto.search_station import start_search, search_station_conv_handler
 from telegrambot_reservauto.welcome import start, start_conv_handler
 
@@ -24,10 +22,6 @@ TELEGRAM_BOT_TOKEN=getenv('TELEGRAM_BOT_TOKEN')
 TELEGRAM_WEBHOOK_TOKEN=getenv('TELEGRAM_WEBHOOK_TOKEN')
 TELEGRAM_WEBHOOK_URL=getenv('TELEGRAM_WEBHOOK_URL')
 TELEGRAM_WEBHOOK_PORT=getenv('TELEGRAM_WEBHOOK_PORT')
-
-
-database = Database()
-
 
 
 

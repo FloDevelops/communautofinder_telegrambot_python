@@ -7,7 +7,7 @@ from telegram.ext import (
     filters,
     MessageHandler,
 )
-from telegrambot_reservauto.orm import Database
+from telegrambot_reservauto.utilities.orm import Database
 
 database = Database()
 

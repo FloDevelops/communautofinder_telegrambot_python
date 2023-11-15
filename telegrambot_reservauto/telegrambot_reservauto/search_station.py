@@ -9,8 +9,8 @@ from telegram.ext import (
     MessageHandler,
     filters
 )
-from telegrambot_reservauto.logger import CustomLogger
-from telegrambot_reservauto.orm import Database
+from telegrambot_reservauto.utilities.logger import CustomLogger
+from telegrambot_reservauto.utilities.orm import Database
 
 logger = CustomLogger(__name__)
 logger.set_level(20)
@@ -74,7 +74,7 @@ async def check_type_ask_departure_search(update: Update, context: ContextTypes.
     if update.message.text.lower().startswith('s'):
         logger.info('User is looking for a car in station. Asking for departure date and time...')
         await update.message.reply_text(
-            'When is your departure date and time? (dd/mm/yyyy hh:mm)',
+            'When is your departure date and time? (YYYY-MM-DD HH:MM)',
             reply_markup=ReplyKeyboardRemove()
         )
         return SEARCH_STATION_RETURN    
@@ -107,7 +107,7 @@ async def check_departure_ask_return_search_station(update: Update, context: Con
 
     logger.info('Checking departure date and time...')
 
-    if re.match(r'^\d{2}/\d{2}/\d{4} \d{2}:\d{2}$', update.message.text) is None:
+    if re.match(r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$', update.message.text) is None:
         logger.info('User did not enter a valid departure date and time. Asking again...')
         await update.message.reply_text(
             'Sorry, I didn\'t understand that. Please try again.',
@@ -117,7 +117,7 @@ async def check_departure_ask_return_search_station(update: Update, context: Con
     logger.info('User entered a valid departure date and time. Asking for return date and time...')
     context.user_data['departure'] = update.message.text
     await update.message.reply_text(
-        'When is your return date and time? (dd/mm/yyyy hh:mm)'
+        'When is your return date and time? (YYYY-MM-DD HH:MM)'
     )
     return SEARCH_STATION_LOCATION
 
@@ -128,7 +128,7 @@ async def check_return_ask_location_search_station(update: Update, context: Cont
 
     logger.info('Checking return date and time...')
 
-    if re.match(r'^\d{2}/\d{2}/\d{4} \d{2}:\d{2}$', update.message.text) is None:
+    if re.match(r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$', update.message.text) is None:
         logger.info('User did not enter a valid return date and time. Asking again...')
         await update.message.reply_text(
             'Sorry, I didn\'t understand that. Please try again.',
@@ -186,8 +186,8 @@ async def check_radius_get_results_search_station(update: Update, context: Conte
         max_latitude=area['max_latitude'],
         min_longitude=area['min_longitude'],
         max_longitude=area['max_longitude'],
-        start_datetime=datetime.strptime(context.user_data.get('departure'), '%d/%m/%Y %H:%M'),
-        end_datetime=datetime.strptime(context.user_data.get('return'), '%d/%m/%Y %H:%M')
+        start_datetime=datetime.strptime(context.user_data.get('departure'), '%Y-%m-%d %H:%M'),
+        end_datetime=datetime.strptime(context.user_data.get('return'), '%Y-%m-%d %H:%M')
     )
     stations_string = '\n- '.join([station['stationName'] for station in stations])
     await update.message.reply_text(
@@ -207,8 +207,8 @@ def search_station_conv_handler():
         entry_points=[CommandHandler('search', start_search)],
         states={
             SEARCH_TYPE: [MessageHandler(filters.Regex(re.compile(r'^(s|f)', re.IGNORECASE)), check_type_ask_departure_search)],
-            SEARCH_STATION_RETURN: [MessageHandler(filters.Regex(re.compile(r'^\d{2}/\d{2}/\d{4} \d{2}:\d{2}$')), check_departure_ask_return_search_station)],
-            SEARCH_STATION_LOCATION: [MessageHandler(filters.Regex(re.compile(r'^\d{2}/\d{2}/\d{4} \d{2}:\d{2}$')), check_return_ask_location_search_station)],
+            SEARCH_STATION_RETURN: [MessageHandler(filters.Regex(re.compile(r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$')), check_departure_ask_return_search_station)],
+            SEARCH_STATION_LOCATION: [MessageHandler(filters.Regex(re.compile(r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$')), check_return_ask_location_search_station)],
             SEARCH_STATION_RADIUS: [MessageHandler(filters.LOCATION, check_location_ask_radius_search_station)],
             SEARCH_STATION_RESULTS: [MessageHandler(filters.Regex(re.compile(r'^\d{1,2}(\.\d{1,2})?$')), check_radius_get_results_search_station)]
         },
