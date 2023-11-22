@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "back-reservauto"
+version = "0.1.0"
+description = ""
+authors = ["FloDevelops <65234487+FloDevelops@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.scripts]
+dev = "back_reservauto.main:dev"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.104.1"
+uvicorn = {extras = ["standard"], version = "^0.24.0.post1"}
+sqlalchemy = "^2.0.23"
+python-dotenv = "^1.0.0"
+mysql-connector-python = "^8.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
