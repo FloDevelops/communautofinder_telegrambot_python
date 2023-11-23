@@ -2,7 +2,9 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 
 from back_reservauto.dependencies import get_db
-from . import crud, schemas
+from back_reservauto.models.users import schemas
+from . import crud
+
 
 router = APIRouter(
     prefix='/users',
