@@ -3,54 +3,16 @@ from fastapi import FastAPI, Depends, status, HTTPException
 # from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
-from back_reservauto.database import SessionLocal, engine
-from back_reservauto import crud, models, schemas
+from back_reservauto.database import engine
+from back_reservauto import models
+from back_reservauto.routers.api import users
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+app.include_router(users.router)
 
-
-@app.get('/users')
-def get_users(db: Session = Depends(get_db)):
-    users = crud.get_users(db)
-    return users
-
-@app.get('/users/{user_id}')
-def get_user(user_id: str, db: Session = Depends(get_db)):
-    db_user = crud.get_user(user_id, db)
-    if db_user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User not found')
-    return db_user
-
-@app.post('/users')
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.get_user(user.telegram_user_id, db)
-    if db_user:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='User already exists')
-    return crud.create_user(user, db)
-
-@app.put('/users/{user_id}')
-def update_user(user_id: str, user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.get_user(user_id, db)
-    if db_user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User not found')
-    return crud.update_user(user, db)
-
-@app.delete('/users/{user_id}')
-def delete_user(user_id: str, db: Session = Depends(get_db)):
-    db_user = crud.get_user(user_id, db)
-    if db_user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User not found')
-    return crud.delete_user(user_id, db)
 
 
 def dev():
