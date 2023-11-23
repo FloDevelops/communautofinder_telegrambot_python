@@ -1,11 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 
-from back_reservauto.database import engine
-from back_reservauto import models
-from back_reservauto.routers.api import main
-
-models.Base.metadata.create_all(bind=engine)
+from .routers.api import main
 
 app = FastAPI()
 

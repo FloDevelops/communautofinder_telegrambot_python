@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 
 from back_reservauto.dependencies import get_db
-from back_reservauto import crud, schemas
+from . import crud, schemas
 
 router = APIRouter(
     prefix='/users',
@@ -21,7 +21,7 @@ def get_user(user_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User not found')
     return db_user
 
-@router.post('/')
+@router.post('')
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user(user.telegram_user_id, db)
     if db_user:
