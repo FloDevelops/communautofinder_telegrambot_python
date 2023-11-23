@@ -1,19 +1,15 @@
 import uvicorn
-from fastapi import FastAPI, Depends, status, HTTPException
-# from fastapi.responses import RedirectResponse
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
 
 from back_reservauto.database import engine
 from back_reservauto import models
-from back_reservauto.routers.api import users
+from back_reservauto.routers.api import main
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-app.include_router(users.router)
-
-
+app.include_router(main.router)
 
 def dev():
     '''Launch by `poetry run start` at the root of the project'''
