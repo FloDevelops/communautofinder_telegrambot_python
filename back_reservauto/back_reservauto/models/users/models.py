@@ -1,5 +1,6 @@
 from datetime import datetime
 from sqlalchemy import Column, String, DateTime, Boolean
+from sqlalchemy.orm import relationship
 
 from back_reservauto.database import Base
 
@@ -17,3 +18,4 @@ class User(Base):
     preferred_city_id = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
     last_updated_at = Column(DateTime, default=datetime.utcnow)
+    # searches = relationship('Search', back_populates='telegram_user_id')

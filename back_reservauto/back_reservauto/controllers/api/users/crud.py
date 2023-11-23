@@ -2,10 +2,10 @@ from sqlalchemy.orm import Session
 
 from back_reservauto.models.users import models, schemas
 
-def get_users(db: Session):
+def read_users(db: Session):
     return db.query(models.User).all()
 
-def get_user(user_id: str, db: Session):
+def read_user(user_id: str, db: Session):
     return db.query(models.User).filter(models.User.telegram_user_id == user_id).first()
 
 def create_user(user: schemas.UserCreate, db: Session):
@@ -27,6 +27,8 @@ def create_user(user: schemas.UserCreate, db: Session):
 
 def update_user(user: schemas.User, db: Session):
     db_user = db.query(models.User).filter(models.User.telegram_user_id == user.telegram_user_id).first()
+    if db_user is None:
+        return None
     db_user.telegram_username = user.telegram_username
     db_user.telegram_first_name = user.telegram_first_name
     db_user.telegram_last_name = user.telegram_last_name
