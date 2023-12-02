@@ -45,6 +45,6 @@ services:
       - "4040:4040"
     environment:
       - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
-    command: http --domain=improved-usefully-mackerel.ngrok-free.app telegram-bot:8443
+    command: http --domain=${NGROK_DOMAIN} telegram-bot:${TELEGRAM_WEBHOOK_PORT}
     networks:
       - communauto
