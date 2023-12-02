@@ -25,7 +25,7 @@ class Database():
                 # See https://planetscale.com/docs/concepts/secure-connections#ca-root-configuration
                 # to determine the path to your operating systems certificate file.
                 # ssl={ 'ca': '' }
-                ssl={ 'ca': '/etc/ssl/cert.pem' } # For macOS
+                ssl={ 'ca': '/etc/ssl/certs/ca-certificates.crt' }
             )
         
         except MySQLdb.Error as e:

@@ -1,7 +1,6 @@
 import logging
 import json
 from os import getenv
-from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import (
     ApplicationBuilder,
@@ -17,7 +16,6 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-load_dotenv()
 TELEGRAM_BOT_TOKEN=getenv('TELEGRAM_BOT_TOKEN')
 TELEGRAM_WEBHOOK_TOKEN=getenv('TELEGRAM_WEBHOOK_TOKEN')
 TELEGRAM_WEBHOOK_URL=getenv('TELEGRAM_WEBHOOK_URL')
@@ -31,7 +29,7 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text=update.message.text
         )
 
-async def get_help(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def show_help(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(
         chat_id=update.effective_chat.id, 
         text='Available commands:\n' + '\n'.join([f'/{command[0]} - {command[1]["description"]}' for command in commands.items()])
@@ -51,7 +49,7 @@ commands = {
     },
     'help': {
         'description': 'Show help',
-        'function': get_help
+        'function': show_help
     },
     'account': {
         'description': 'Manage your account',
@@ -86,8 +84,9 @@ def main():
     for command in commands.items():
         application.add_handler(CommandHandler(command[0], command[1]['function']))
         
+    logging.info('Webhook starting...')
     application.run_webhook(
-        listen='127.0.0.1',
+        listen='0.0.0.0',
         port=TELEGRAM_WEBHOOK_PORT,
         secret_token=TELEGRAM_WEBHOOK_TOKEN,
         webhook_url=f'{TELEGRAM_WEBHOOK_URL}'

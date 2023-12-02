@@ -1,0 +1,50 @@
+networks:
+  communauto:
+    driver: bridge
+
+services:
+  api:
+    build: services/api/.
+    environment:
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE=${DATABASE}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./services/api:/code
+    command: poetry run dev
+    networks:
+      - communauto
+
+  telegram-bot:
+    build: services/telegrambot/.
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_WEBHOOK_TOKEN=${TELEGRAM_WEBHOOK_TOKEN}
+      - TELEGRAM_WEBHOOK_URL=${TELEGRAM_WEBHOOK_URL}
+      - TELEGRAM_WEBHOOK_PORT=${TELEGRAM_WEBHOOK_PORT}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE=${DATABASE}
+    volumes:
+      - ./services/telegrambot:/code
+    command: poetry run start
+    depends_on:
+      - ngrok
+    networks:
+      - communauto
+  
+  ngrok:
+    container_name: ngrok
+    image: ngrok/ngrok:latest
+    ports:
+      - "4040:4040"
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    command: http --domain=improved-usefully-mackerel.ngrok-free.app telegram-bot:8443
+    networks:
+      - communauto
