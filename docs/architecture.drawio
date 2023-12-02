@@ -1,0 +1,43 @@
+<mxfile host="65bd71144e">
+    <diagram id="bxpGXiDVEFKg5fhQl0Ib" name="architecture">
+        <mxGraphModel dx="1194" dy="863" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="db" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="736" y="270" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" style="edgeStyle=entityRelationEdgeStyle;html=1;endArrow=none;endFill=0;fillColor=#647687;strokeColor=#314354;" parent="1" source="3" target="15" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shadow=0;dashed=0;strokeWidth=1;shape=mxgraph.android.phone2;strokeColor=#c0c0c0;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="230" width="70" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;html=1;labelBackgroundColor=default;strokeColor=#314354;fontFamily=Helvetica;fontSize=11;fontColor=default;endArrow=none;endFill=0;fillColor=#647687;curved=1;" parent="1" source="4" target="8" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://reservauto.com/wp-content/uploads/2019/11/logo-web.png;" parent="1" vertex="1">
+                    <mxGeometry x="486" y="80" width="181.77" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" style="edgeStyle=entityRelationEdgeStyle;shape=connector;rounded=1;html=1;labelBackgroundColor=default;strokeColor=#314354;fontFamily=Helvetica;fontSize=11;fontColor=default;endArrow=none;endFill=0;fillColor=#647687;" parent="1" source="7" target="8" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="telegrambot" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="296" y="270" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" style="edgeStyle=entityRelationEdgeStyle;shape=connector;rounded=1;html=1;labelBackgroundColor=default;strokeColor=#314354;fontFamily=Helvetica;fontSize=11;fontColor=default;endArrow=none;endFill=0;fillColor=#647687;" parent="1" source="8" target="2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="api" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="516" y="270" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;html=1;labelBackgroundColor=default;strokeColor=#314354;fontFamily=Helvetica;fontSize=11;fontColor=default;endArrow=none;endFill=0;fillColor=#647687;" parent="1" source="15" target="7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://qwestore.com/png_images_min/10/bTelegram-iconb-bTelegram-Logob-You-5164.png;" parent="1" vertex="1">
+                    <mxGeometry x="160" y="261.5" width="77" height="77" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
