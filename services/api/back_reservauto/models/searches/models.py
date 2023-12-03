@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, String, Integer, DateTime, Enum, DECIMAL
+from sqlalchemy import Column, String, Integer, DateTime, Enum, DECIMAL, BINARY
 # from sqlalchemy.orm import relationship
 
 from back_reservauto.database import Base
@@ -7,8 +7,8 @@ from back_reservauto.database import Base
 class Search(Base):
     __tablename__ = 'searches'
 
-    search_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    telegram_user_id = Column(String)
+    search_id = Column(BINARY(16), primary_key=True)
+    user_id = Column(BINARY(16))
     search_type = Column(Enum('station','flex', name='search_type'))
     city_id = Column(String)
     area_min_lat = Column(DECIMAL)

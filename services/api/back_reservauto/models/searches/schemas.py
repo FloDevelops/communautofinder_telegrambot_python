@@ -2,7 +2,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 class SearchBase(BaseModel):
-    telegram_user_id: str
+    user_id: bytes
     search_type: str
     city_id: str
     area_min_lat: float
@@ -19,10 +19,10 @@ class SearchUpdate(SearchBase):
     search_status: str
 
 class Search(SearchBase):
-    search_id: str
+    search_id: bytes
     search_status: str
     created_at: datetime
     last_updated_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True

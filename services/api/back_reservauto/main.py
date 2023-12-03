@@ -7,6 +7,10 @@ app = FastAPI()
 
 app.include_router(main.router)
 
+@app.get('/')
+def root():
+    return 'Hello World!'
+
 def dev():
     '''Launch by `poetry run start` at the root of the project'''
     uvicorn.run('back_reservauto.main:app', host='0.0.0.0', port=8000, reload=True)

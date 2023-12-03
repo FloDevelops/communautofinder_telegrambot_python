@@ -4,18 +4,24 @@ from pydantic import BaseModel
 
 class UserBase(BaseModel):
     telegram_user_id: str
-    
-class UserCreate(UserBase):
     telegram_username: str
     telegram_first_name: str
     telegram_last_name: str
     telegram_language_code: str
     telegram_chat_id: str
-    is_enabled: Union[bool, None] = False
+    
+class UserCreate(UserBase):
     has_accepted_communications: Union[bool, None] = False
     preferred_city_id: str
 
+class UserUpdate(UserBase):
+    user_id: bytes
+    is_enabled: Union[bool, None]
+    has_accepted_communications: Union[bool, None]
+    preferred_city_id: str
+
 class User(UserBase):
+    user_id: bytes
     telegram_username: str
     telegram_first_name: str
     telegram_last_name: str
@@ -28,4 +34,4 @@ class User(UserBase):
     last_updated_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True

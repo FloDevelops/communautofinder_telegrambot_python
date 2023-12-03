@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, Boolean
+from sqlalchemy import Column, String, DateTime, Boolean, BINARY
 from sqlalchemy.orm import relationship
 
 from back_reservauto.database import Base
@@ -7,7 +7,8 @@ from back_reservauto.database import Base
 class User(Base):
     __tablename__ = 'users'
 
-    telegram_user_id = Column(String, primary_key=True, index=True)
+    user_id = Column(BINARY(16), primary_key=True)
+    telegram_user_id = Column(String, unique=True)
     telegram_username = Column(String)
     telegram_first_name = Column(String)
     telegram_last_name = Column(String)

@@ -25,7 +25,7 @@ def create_user(user: schemas.UserCreate, db: Session):
     db.refresh(db_user)
     return db_user
 
-def update_user(user: schemas.User, db: Session):
+def update_user(user: schemas.UserUpdate, db: Session):
     db_user = db.query(models.User).filter(models.User.telegram_user_id == user.telegram_user_id).first()
     if db_user is None:
         return None
