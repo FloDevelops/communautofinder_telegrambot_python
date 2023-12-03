@@ -10,12 +10,15 @@ dev = "back_reservauto.main:dev"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = "^0.104.1"
+fastapi = {extras = ["all"], version = "^0.104.1"}
 uvicorn = {extras = ["standard"], version = "^0.24.0.post1"}
 sqlalchemy = "^2.0.23"
 python-dotenv = "^1.0.0"
 mysql-connector-python = "^8.2.0"
 
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.3"
 
 [build-system]
 requires = ["poetry-core"]

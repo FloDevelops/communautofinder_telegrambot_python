@@ -33,5 +33,5 @@ class User(UserBase):
     created_at: datetime
     last_updated_at: datetime
 
-    class Config:
+    class ConfigDict:
         from_attributes = True

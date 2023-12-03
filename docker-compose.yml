@@ -10,7 +10,7 @@ services:
       - DATABASE_PORT=${DATABASE_PORT}
       - DATABASE_USERNAME=${DATABASE_USERNAME}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-      - DATABASE=${DATABASE}
+      - DATABASE_NAME=${DATABASE_NAME}
     ports:
       - "8000:8000"
     volumes:
@@ -29,7 +29,7 @@ services:
       - DATABASE_HOST=${DATABASE_HOST}
       - DATABASE_USERNAME=${DATABASE_USERNAME}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-      - DATABASE=${DATABASE}
+      - DATABASE_NAME=${DATABASE_NAME}
     volumes:
       - ./services/telegrambot:/code
     command: poetry run start
