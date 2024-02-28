@@ -12,6 +12,7 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.11"
 requests = "^2.31.0"
+pydantic = "^2.6.3"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"

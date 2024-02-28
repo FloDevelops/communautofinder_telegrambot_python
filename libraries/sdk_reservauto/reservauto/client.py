@@ -1,144 +1,199 @@
-import logging
-from logging.handlers import TimedRotatingFileHandler
-import json
+# import logging
 from datetime import datetime
-from requests import get
+from typing import List, Any, Optional
+from requests import get, post, put, delete
+from .models.Branch import Branch
+from .models.City import City
+from .models.Station import StationAvailability as StationAvailabilityModel
 
-emoji_dict = {
-    'DEBUG': '🐛',
-    'INFO': '',
-    'WARNING': '❗',
-    'ERROR': '❌',
-    'CRITICAL': '💥',
-}
-class EmojiFormatter(logging.Formatter):
-    def format(self, record):
-        level_name = record.levelname
-        emoji = emoji_dict.get(level_name, '')
-        record.levelname = f'{level_name} {emoji}'
-        return super().format(record)
+# emoji_dict = {
+#     "DEBUG": "🐛",
+#     "INFO": "",
+#     "WARNING": "❗",
+#     "ERROR": "❌",
+#     "CRITICAL": "💥",
+# }
 
-logger = logging.getLogger(__name__)
-log_to_console = logging.StreamHandler()
-log_to_console.setLevel(logging.INFO)
-log_format = EmojiFormatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-log_to_console.setFormatter(log_format)
-logger.addHandler(log_to_console)
-logger.setLevel(logging.INFO)
+# class EmojiFormatter(logging.Formatter):
+#     def format(self, record: logging.LogRecord) -> str:
+#         level_name = record.levelname
+#         emoji = emoji_dict.get(level_name, "")
+#         record.levelname = f"{level_name} {emoji}"
+#         return super().format(record)
 
 
-class ReservautoClient:
-    '''A client to communicate with Reservauto's API.'''
-    def __init__(self):
-        logger.info('Initializing Reservauto client...')
-        self.base_url = 'https://restapifrontoffice.reservauto.net/api'
-        self.branches = None
-        self.cities = None
-        self.stations = None
-        logger.info('✅ Reservauto client initialized.')
-
-    def get_branches(self) -> dict:
-        '''Returns a list of all available branches.'''
-
-        logger.info('Getting branches...')
-
-        version = 'v2'
-        endpoint = 'AvailableBranch'
-
-        branches = []
-        for i in range(1, 20):
-            params = {
-                'branchId': i,
-            }
-            url = f'{self.base_url}/{version}/{endpoint}'
-
-            try:
-                response = get(url, params=params, timeout=5)
-                if response.status_code != 200:
-                    logger.warning(
-                        f'Warning {response.status_code} for branch {i}')
-                    continue
-                for branch in response.json().get('branches'):
-                    if branch.get('branchId') == i:
-                        branches.append(branch)
-
-            except Exception as e:
-                logger.error(e)
-                return None
-
-        self.branches = branches
-        logger.info(f'✅ Found {len(self.branches)} branches.')
-        return self.branches
-    
-
-    def get_cities(self, branch_id: int) -> dict:
-        '''Returns a list of all available cities for a given branch.'''
-
-        logger.info(f'Getting cities for branch {branch_id}...')
-
-        version = 'v2'
-        endpoint = 'AvailableCity'
-
-        url = f'{self.base_url}/{version}/Branch/{branch_id}/{endpoint}'
-        try:
-            response = get(url, timeout=5)
-            if response.status_code != 200:
-                logger.error(
-                    f'Error {response.status_code} for branch {branch_id}')
-                return None
-
-            cities = response.json().get('cities')
-            filtered_cities = [
-                city for city in cities if city.get('branchId') == branch_id]
-            self.cities = filtered_cities
-            logger.info(f'✅ Found {len(self.cities)} cities.')
-            return self.cities
-
-        except Exception as e:
-            logger.error(e)
-            return None
+# logger = logging.getLogger(__name__)
+# log_to_console = logging.StreamHandler()
+# log_to_console.setLevel(logging.INFO)
+# log_format = EmojiFormatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+# log_to_console.setFormatter(log_format)
+# logger.addHandler(log_to_console)
+# logger.setLevel(logging.INFO)
 
 
-    def get_stations_availability(self, min_latitude: float, max_latitude: float, min_longitude: float, max_longitude: float, start_datetime: datetime, end_datetime: datetime, city_id: int = None, city: dict = None) -> dict:
-        '''Returns a list of all available stations for a given city, location and time range.'''
-
-        if city_id is None and city is None:
-            logger.error('Error: city_id or city must be specified.')
-            return None
-        elif city_id is None:
-            city_id = city.get('cityId')
-
-        logger.info(f'Getting stations for city {city_id} from {start_datetime} to {end_datetime}...')
-
-        version = 'v2'
-        endpoint = 'StationAvailability'
-
-
-        url = f'{self.base_url}/{version}/{endpoint}'
-        params = {
-            'cityId': city_id,
-            'MinLatitude': min_latitude,
-            'MaxLatitude': max_latitude,
-            'MinLongitude': min_longitude,
-            'MaxLongitude': max_longitude,
-            'StartDate': start_datetime.strftime('%Y-%m-%dT%H:%M:%S'),
-            'EndDate': end_datetime.strftime('%Y-%m-%dT%H:%M:%S'),
+class BaseReservautoClient:
+    def __init__(self, api_key: Optional[str] = None):
+        self.base_url = "https://restapifrontoffice.reservauto.net/api"
+        self.api_key = api_key
+        self.headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}",
         }
-        try:
-            response = get(url, params=params, timeout=5)
-            if response.status_code != 200:
-                logger.error(
-                    f'Error {response.status_code} for city {city_id}')
-                return None
 
-            logger.debug(json.dumps(response.json(),
-                    indent=4, ensure_ascii=False))
-            stations = response.json().get('stations')
-            self.stations = stations
-            logger.info(f'✅ Found {len(self.stations)} stations.')
-            return self.stations
+    def _get(
+        self,
+        endpoint: str,
+        params: Optional[dict[str, Any]] = None,
+        version: str = "v2",
+    ) -> dict[str, Any]:
+        response = get(
+            f"{self.base_url}/{version}/{endpoint}",
+            headers=self.headers,
+            params=params,
+            timeout=10,
+        )
+        response.raise_for_status()
+        return response.json()
 
-        except Exception as e:
-            logger.error(e)
+    def _post(
+        self, endpoint: str, data: dict[str, Any], version: str = "v2"
+    ) -> dict[str, Any]:
+        response = post(
+            f"{self.base_url}/{version}/{endpoint}",
+            headers=self.headers,
+            json=data,
+            timeout=10,
+        )
+        response.raise_for_status()
+        return response.json()
+
+    def _put(
+        self, endpoint: str, data: dict[str, Any], version: str = "v2"
+    ) -> dict[str, Any]:
+        response = put(
+            f"{self.base_url}/{version}/{endpoint}",
+            headers=self.headers,
+            json=data,
+            timeout=10,
+        )
+        response.raise_for_status()
+        return response.json()
+
+    def _delete(
+        self, endpoint: str, data: dict[str, Any], version: str = "v2"
+    ) -> dict[str, Any]:
+        response = delete(
+            f"{self.base_url}/{version}/{endpoint}",
+            headers=self.headers,
+            json=data,
+            timeout=10,
+        )
+        response.raise_for_status()
+        return response.json()
+
+
+class AvailableBranches(BaseReservautoClient):
+    def __init__(self) -> None:
+        super().__init__()
+        self.version = "v2"
+        self.endpoint = "AvailableBranch"
+
+    def get(self, branch_id: int) -> Optional[Branch]:
+        response_body = self._get(
+            self.endpoint, params={"branchId": branch_id}, version=self.version
+        )
+        branches = response_body.get("branches")
+        if not branches:
             return None
+        branch = next(
+            (branch for branch in branches if branch.get("branchId") == branch_id), None
+        )
+        return branch
+
+    def list(
+        self,
+    ) -> List[Optional[Branch]]:  # Assuming Branch is a class in the Branch module
+        branches: List[Optional[Branch]] = []
+        for i in range(1, 15):
+            branch: Optional[Branch] = self.get(i)
+            if branch is not None:
+                branches.append(branch)
+        return branches
+
+
+class ReservautoCities(BaseReservautoClient):
+    def __init__(self, branch_id: int) -> None:
+        super().__init__()
+        self.version = "v2"
+        self.endpoint = f"Branch/{branch_id}/AvailableCity"
+
+    def list(self) -> Optional[List[City]]:
+        response_body = self._get(self.endpoint, version=self.version)
+        return response_body.get("cities")
+
+
+class StationAvailability(BaseReservautoClient):
+    def __init__(self) -> None:
+        super().__init__()
+        self.version = "v2"
+        self.endpoint = "StationAvailability"
+
+    def list(
+        self,
+        city_id: int,
+        min_latitude: float,
+        max_latitude: float,
+        min_longitude: float,
+        max_longitude: float,
+        start_datetime: datetime,
+        end_datetime: datetime,
+    ) -> Optional[List[StationAvailabilityModel]]:
+        self.city_id = city_id
+        self.min_latitude = min_latitude
+        self.max_latitude = max_latitude
+        self.min_longitude = min_longitude
+        self.max_longitude = max_longitude
+        self.start_datetime = start_datetime
+        self.end_datetime = end_datetime
+        params = {
+            "cityId": self.city_id,
+            "MinLatitude": self.min_latitude,
+            "MaxLatitude": self.max_latitude,
+            "MinLongitude": self.min_longitude,
+            "MaxLongitude": self.max_longitude,
+            "StartDate": self.start_datetime.strftime("%Y-%m-%dT%H:%M:%S"),
+            "EndDate": self.end_datetime.strftime("%Y-%m-%dT%H:%M:%S"),
+        }
+        response_body = self._get(self.endpoint, params=params, version=self.version)
+        return response_body.get("stations")
+
+
+class FreeFloatingVehiclesAvailability(BaseReservautoClient):
+    def __init__(self) -> None:
+        super().__init__()
+        self.version = "v2"
+        self.endpoint = "Vehicle/FreeFloatingAvailability"
+
+    def list(
+        self,
+        city_id: int,
+        min_latitude: float,
+        max_latitude: float,
+        min_longitude: float,
+        max_longitude: float,
+    ) -> Optional[List[dict[str, Any]]]:
+        self.city_id = city_id
+        self.min_latitude = min_latitude
+        self.max_latitude = max_latitude
+        self.min_longitude = min_longitude
+        self.max_longitude = max_longitude
+        params = {
+            "cityId": self.city_id,
+            "MinLatitude": self.min_latitude,
+            "MaxLatitude": self.max_latitude,
+            "MinLongitude": self.min_longitude,
+            "MaxLongitude": self.max_longitude,
+        }
+        response_body = self._get(self.endpoint, params=params, version=self.version)
+        return response_body.get("vehicles")
+    
